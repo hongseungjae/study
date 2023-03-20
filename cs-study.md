@@ -118,8 +118,10 @@ Thread safe한 자료 구조 사용: Vector, ConcurrentHashMap, CopyOnWriteArray
 
 # 네트워크
 ### Socket 으로 바로 통신하는 것 대비 HTTP 는 비효율적인데도 왜 많은 앱들은 HTTP 를 쓰는 걸까요?
+* 내 대답 : 아... HTTP를 통신할 시 html이나 json 이런 형식을 효율적으로 사용할 수 있어서 그런 것 같습니다.
 
 ### OSI Layer 7 또는 TCP Model 에 대해 설명해주세요.
+
 
 ### 차세대 프로토콜로 논의중인 HTTP/3 은 UDP 기반의 QUIC 이라는 기술로 구현되어 있습니다. UDP 는 TCP 대비 안정성이 떨어지는 프로토콜이라고 하는데, 그럼에도 왜 UDP 를 채택한 걸까요?
 
