@@ -121,6 +121,20 @@ Thread safe한 자료 구조 사용: Vector, ConcurrentHashMap, CopyOnWriteArray
 * 내 대답 : 아... HTTP를 통신할 시 html이나 json 이런 형식을 효율적으로 사용할 수 있어서 그런 것 같습니다.
 
 ### OSI Layer 7 또는 TCP Model 에 대해 설명해주세요.
+물리 계층 (Physical Layer) : 데이터를 전기적인 신호로 변환 주고 받는 기능
+데이터 링크 계층 (Data Link Layer) : mac 주소로 변환 해석
+네트워크 계층 (Network Layer) : ip로 라우팅을 하여 패킷을 전송
+전송 계층 (Transport Layer) : 프로세스 간의 연결을 설정하고, 데이터의 흐름을 제어하며, 오류 검출 및 정정, 흐름 제어, 혼잡 제어 등을 수행합니다. 이 계층에서 사용되는 프로토콜로는 TCP, UDP 등이 있습니다
+세션 계층 (Session Layer)
+표현 계층 (Presentation Layer)
+응용 계층 (Application Layer)
+반면에 TCP/IP 모델은 인터넷 프로토콜 스위트의 핵심 프로토콜인 TCP (Transmission Control Protocol)와 IP (Internet Protocol)를 기반으로 한 모델입니다. OSI 7계층과 다르게 TCP/IP 모델은 4개의 계층으로 구성됩니다.
+
+네트워크 액세스 계층 (Network Access Layer)
+인터넷 계층 (Internet Layer)
+전송 계층 (Transport Layer)
+응용 계층 (Application Layer)
+
 
 
 ### 차세대 프로토콜로 논의중인 HTTP/3 은 UDP 기반의 QUIC 이라는 기술로 구현되어 있습니다. UDP 는 TCP 대비 안정성이 떨어지는 프로토콜이라고 하는데, 그럼에도 왜 UDP 를 채택한 걸까요?
