@@ -1,4 +1,4 @@
-** 이분탐색
+### 이분탐색
 
 		while (left <= right) {
 			mid = (left + right) / 2;
@@ -15,3 +15,21 @@
 			}
 
 		}
+
+### PriorityQueue
+	PriorityQueue<Time> q = new PriorityQueue();
+
+	static class Time implements Comparable<Time> {
+        int start;
+        int end;
+
+        public Time(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        public int compareTo(Time o) {
+            return this.start - o.start;
+        }
+    }
