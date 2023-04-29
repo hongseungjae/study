@@ -33,3 +33,17 @@
             return this.start - o.start;
         }
     }
+
+### 정렬
+	  // List
+        Collections.sort(bookList,(o1,o2)->{
+            if(o1.start_time==o2.start_time) return o1.end_time-o2.end_time;
+            else return o1.start_time-o2.start_time;
+        });
+	
+	// 배열
+	Arrays.sort(bookList,(o1,o2)->{
+            if(o1.start_time==o2.start_time) return o1.end_time-o2.end_time;
+            else return o1.start_time-o2.start_time;
+        });
+	
