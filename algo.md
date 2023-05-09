@@ -49,3 +49,21 @@
 	
 	
 ### dfs 
+
+
+### 조합 n개중 r개 뽑기
+ // n = 29 r = 13
+    static public double comb(double n, double r ){
+        double a = 1;
+        double b = 1;
+
+        for (double i = n; i > n - r; i--) {
+            a = a * i;
+        }
+
+        for (double i = r; i > 0; i--) {
+            b = b * i;
+        }
+        
+        return a/b;
+    }
