@@ -177,11 +177,23 @@ name | age | rnk
 
 
 ### 8강
-조건분기 시 UNION을 테이블에 접근하는 횟수가 많아져서 I/O 비용이 크게늘어남 -> 
+조건분기 시 UNION을 테이블에 접근하는 횟수가 많아져서 I/O 비용이 크게늘어남 -> 신중히해야됨 -> CASE사용
 
 
+### 9강
+
+CASE식 SUM에도 사용방법
+SELECT prefecture,
+      SUM(CASE WHEN sex ='1' THEN pop ELSE 0 END) AS pop_men,
+      SUM(CASE WHEN sex ='2' THEN pop ELSE 0 END) AS pop_wom,
+     FROM Population
+     GROUP BY prefecture
 
 
+union을 사용할때는 SELECT 구문들에서 사용하는 테이블이 다른 경우가 
+
+
+집약함수 : 여러개의 레코드를 한 개의 레코드로 집약하는 기능(COUNT, SUM, AVG, MAX, MIN)
 
 
 
