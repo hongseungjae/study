@@ -1,3 +1,16 @@
+### MST, 다익스트라
+다익스트라는 그래프에서 두 점간에 최단 경로를 찾는 알고리즘이다.
+
+크루스칼(kruskal)과 프림(prim) 알고리즘은
+최소신장트리(Minimum Spanning Tree, MST) 알고리즘이다.
+
+즉, 최소의 비용으로 모든 점을 다 이을 때 사용하는 알고리즘이다.
+
+### 배열 최대값
+        int[] R;
+	OptionalInt max = Arrays.stream(R).max();
+        System.out.println(max.getAsInt());
+
 ### 이분탐색
 
 		while (left <= right) {
