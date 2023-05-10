@@ -53,4 +53,136 @@ SQL 실행구문 종류 예시
 
 결합 전에 테이블 접근이 일어나는데(당연히) 어떤 테이블에 먼저 접근하지가 굉장히 중요, 같은 중첩 단계는 위에서 아래로
 
+### 6. SELECT 구문
+
+or가 많아질 경우 복잡해질 수 있음
+IN을 사용해보기
+
+```
+-> OR 이용
+SELECT name, address from Address
+WHERE address = '서울시'
+   OR address = '부산시'
+   OR address = '인천시';
+   
+-> IN 이용
+SELECT name, address from Address
+WHERE address IN ('서울시','부산시','인천시);
+```
+
+NULL 찾을때는 IS NULL 이나 IS NOT NULL 이용 =NULL은 안됨
+
+WHERE구가 '레코드'에 조건을 지정, HAVING구는 '집합'에 조건을 지정
+
+```
+SELECT address, COUNT(*)
+FROM Address
+GROUP BY address
+HAVING COUNT(*) = 1;
+
+address | count
+속초시   | 1
+서귀포시 | 1
+```
+
+**뷰**는 SELECT 구문을 데이터베이스 안에 저장한다는것, 사용방법은 테이블과 같고 내부에는 데이터를 보유하지 않는다는 점이 테이블과다름
+
+**서브쿼리** FROM 구에 직접 지정하는 SELECT 구문
+
+```
+IN내부에서 서브쿼리 예제
+
+SELECT name
+  FROM Address
+  WHERE name IN (SELECT name FROM Address2);
+  
+실제 전개되면
+SELECT name
+  FROM Address
+  WHERE name IN ('인성', '민', '준서', '지연', '서준', '중진');
+  
+```
+**검색 CASE 식**
+
+조건분기를 위한 식
+WHEN구의 평가식이라는 것은 필드=값 처럼 조건을 지정하는 식
+```
+SELECT name, address,
+  CASE WHEN address ='서울시' THEN '경기'
+  CASE WHEN address ='인천시' THEN '경기'
+  ELSE NULL END AS disitrict
+FROM Address;
+
+
+실행결과
+
+name | address | district
+인성  | 서울시  | 경기
+하진  | 서울시  | 경기
+...
+```
+
+합집합 구하기 
+
+UNION
+
+모든 필드가 똑같은 레코드 겹치면 중복 제거 -> 제외싫다면 UNION ALL사용 INTERSECT와 EXCEPT도 맘찬가지
+
+교집합 구하기
+
+INTERSECT
+
+차집합 구하기
+
+EXCEPT
+
+
+윈도우 함수는 GROUP BY와 같지만 집약하지 않음
+```
+group by에 count를 하면
+속초 시 5
+서울 시 2
+이렇게 출력
+
+PARTITION BY하면
+속초 시 5
+속초 시 5
+속초 시 5
+... 
+이런식으로
+```
+
+윈도우 전용함수로 RANK 또는 ROW_NUMBER
+ROW_NUMBER 는 동일한 순위를 배제하기 위해 유니크한 순위를 정한다. 
+
+```
+나이 많은 수로 랭크 구하기
+
+SELECT name,
+       age,
+       RANK() OVER(ORDER BY age DESC) AS rnk
+  FROM Address;
+  
+name | age | rnk
+하린  | 55 | 1
+준    | 45 | 2
+기주  | 32 | 3
+민    | 32 | 3
+인성  | 30  | 5
+...
+
+32살이 두명이면 둘 다 3등으로 기록되고, 4등을 건너뛰고 5등부터 시작됨, 4등부터 시작되길 원하면 DENSE_RANK
+
+```
+
+
+### 8강
+조건분기 시 UNION을 테이블에 접근하는 횟수가 많아져서 I/O 비용이 크게늘어남 -> 
+
+
+
+
+
+
+
 
