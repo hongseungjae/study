@@ -1,3 +1,7 @@
+### HashSet 순회하면서 contains 찾기
+        boolean exists = resultHs.stream().anyMatch(x -> sb.toString().contains(x));
+
+
 ### MST, 다익스트라
 다익스트라는 그래프에서 두 점간에 최단 경로를 찾는 알고리즘이다.
 
