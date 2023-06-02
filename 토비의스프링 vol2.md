@@ -57,20 +57,64 @@
 * 값주입에 SpEL을 이용하여 능동적으로, 오타와 같은 실수가 있을 때 에러 검증 가능, 프로퍼티를 빈으로 만들고, 그 빈의 이름으로 값을 주입
 
 * 컨테이너가 자동등록하는 빈
- - ApplicationContext, BeanFactory
-  - @Autowired로 자동주입, 그게 안되면 ApplicationContextAware 인터페이스를 구현
- - ResourceLoader, ApplicationEventPublisher
- - systemProperties, systemEnvironment
+  - ApplicationContext, BeanFactory
+    - @Autowired로 자동주입, 그게 안되면 ApplicationContextAware 인터페이스를 구현
+  - ResourceLoader, ApplicationEventPublisher
+  - systemProperties, systemEnvironment
 
 * 기본적으로 스프링의 빈은 싱글톤
- - 매 요청마다 애플리케이션 로직을 담은 오브젝트를 만드는 건 비효율적
- - 하나의 빈에 동시에 여러 스레드가 접근하기때문에, 상태 값을 갖는 인스턴스 변수를 저장해두고 사용할 수 없음 -> 필드에는 빈에 대한 레퍼런스나 읽기전용 값만
- - DTO 등은 파라미터나 리턴 값을 전달하면 싱글톤에서 사용해도 아무런 문제 없음
+  - 매 요청마다 애플리케이션 로직을 담은 오브젝트를 만드는 건 비효율적
+  - 하나의 빈에 동시에 여러 스레드가 접근하기때문에, 상태 값을 갖는 인스턴스 변수를 저장해두고 사용할 수 없음 -> 필드에는 빈에 대한 레퍼런스나 읽기전용 값만
+  - DTO 등은 파라미터나 리턴 값을 전달하면 싱글톤에서 사용해도 아무런 문제 없음
 
-* 싱글톤이 아닌 빈은 프로토타입과 스코프 빈
+* 싱글톤이 아닌 빈은 프로토타입과 스코프 빈(웹어플리케이션)
+  - 프로토타입 빈은 컨테이너에게 빈을 요청할 때마다 매번 새로운 오브젝트를 반환해줌
+  - 프로토타입 빈은 반환하는 순간 컨테이너에게 관리가 안되고 주입받은 오브젝트에게 관리됨, 그 오브젝트 가 싱글톤이면 프로토타입 빈도 생명주기가 싱글톤으로 유지
+  - 매번 새로운 오브젝트가 필요한데 DI가  필요한 오브젝트일 때 사용
+
+* request를 컨트롤러와 서비스계층에서 모두 사용할 경우 163p
+  - request 안에서 dao에 접근해서 member를 세팅해놓기
+  - 이때 request는 di를 받아야됨 -> 빈으로 만들기 -> 프로토타입으로, @Componet @Scope("prototype")
+  - 빈 가져오기 this.conext.getBean(ServiceRequest.classs);, @Autowired로 가져오면 새로 생성되지않음 주의하기
+
+* DL 전략
+  1. ApplcationContext, BeanFactory
+     - ApplicationConext를 DI를 가져오면 부담이됨, 스프링 api가 직접 코드에 등장함, 테스트 시 거대한 저 객체를 모킹해야됨
+  2. ObjectFactory, ObjectFactoryCreatingFactoryBean
+     - 중간에 ApplicationConext를 요청해서 ServiceReqeust빈을 찾아오는 팩토리 빈 만들기
+  3. ServiceLocatorFactoryBean
+     - @Autowired ServiceRequestFactory serviceRequestFactory;로 사용가능
+  4. 메소드 주입
+     - abstract public ServiceRequest getServiceRequest();로 사용가능, \<lookup-method\> 사용
+  5. Provider\<T\>
+     - @Inject Provider\<ServiceRequest\> serviceRequestProvider로 사용가능, 따로 빈 등록 X
 
 
+* 스코프의 종류
+  - 싱글톤, 프로토타입 외 요청, 세션, 글로벌세션, 애플리케이션 네 가지 스코프 
+  - 스코프는 프로토타입과 다르게 컨테이너가 전 과정을 관
 
+* 스코프 빈은 DL 대신 스코프 프록시를 이용하여 DI를 해줄 수 있음
+  - @Scope(value="session", proxyMode-ScopedProxyMode.TARGET_CLASS)
 
+* @Configuration/@Bean, @Autowred 같은 애노테이션을 이용한 빈 의존 관계 설정 방식, @PostConstruct를 통한 빈 초기화 메소드 기능 모드 스프링 컨테이너가 기본적으로 제공하는 기능이 아님
+  - 스프링 컨테이너의 기능을 확장할 수 있는 컨테이너 인프라 빈이 제공하는 기능임
+  - context:annotation-config 태그를 등록하면 됨 -> 이 태그는 context 네임스페이스의 태그를 처리하는 핸들러를 통해 특정 빈이 등록되게함 -> 그 특정빈이 빈의 등록과 관계 설정 등 새로운 기능을 부여하는 컨테이너 인프라빈
+  - 선언하면 여러빈이 등록되며, 그 빈들이 @Configuration 처리하고, @Autowired를 처리함, 각각 역할에 맞춰서
+  - component-scan은 @Configuration처리, @Atuwired도 처리, annotation-config는 빈 스캐너기능은 안됨
 
+* 빈 등록정보 조회 유틸리티 클래스 197p
+* 빈 등록관련 200p
+* 스프링 1.x -> xml을 통한 빈 등록 bean 태그
+* 스프링 2.0 -> aop:config, tx:advice namespace 태그로 좀 더 깔끔하게 xml 정리
+* 스프링 2.5 -> @Component처럼 애노테이션만으로도 빈 등록 가능, 그러나 외부라이브러리에 @Component를 사용불가
+* 스프링 3.0 -> 자바 코드를 이용해 빈설정코드를 만들수있음
+* 스프링 3.1 -> 인프라빈도 자바코드로
+
+* AnnotationConfigWebApplicationContext는 context:annotation-config이 등록해주는 빈을 기본적으로 추가해줌
+
+* 런타임추상화 -> 프로파일
+* getEnvironment() 현재 애플리케이션 컨텍스트에 적용된 활성 프로파일이 무엇인지 확인
+* getActiveProfiles() 활성 프로파일 목록
+* @Autowired Environment로 init()할때 값 주입, 혹은 @Value로 바로 주입(PropertysourcePlaceholderConfigurer 빈은 static 메소드로 등록)
 
