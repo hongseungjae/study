@@ -118,3 +118,37 @@
 * getActiveProfiles() 활성 프로파일 목록
 * @Autowired Environment로 init()할때 값 주입, 혹은 @Value로 바로 주입(PropertysourcePlaceholderConfigurer 빈은 static 메소드로 등록)
 
+======================= 2장
+
+* DAO패턴은 데이터 액세스 기술을 외부에 공개해서는 안되는 것 -> 코드에 영향을 주지않고 데이터 액세스 기술을 변경하거나 하나 이상의 데이터 액세스 기술을 혼합해서 사용할 수 있게 해줌
+* DAO 예외도 메소드 선언부에 throws SQLException과 같은 내부 기술을 드러내는 예외를 직접 노출시키면 안됨
+  - 데이터 액세스 기술에서 던져주는 예외에 일관성이 없음 -> 스프링이 데이터 예외 추상화를 제공(JdbcTemplate과 같은)
+
+* 템플릿/콜백 패턴으로 , try/catch/finally 중복되는 코드 제거
+* DB 연결 풀 기능 -> DataSource
+* JDBC는 자바의 데이터 액세스 기술의 기본이 되는 로우레벨의 API
+  - JDBC는 표준 인터페이스를 제공하고 각 DB벤더는 이 인터페이스를 구현한 드라이버를 제공 -> SQL의 호환성만 유지한다면 DB가 변경되어도 코드 그대로 재사용
+  - 그러나 반복 코드, 체크 예외를 처리해야함, close 안할 시 등 문제 -> 스프링 JDBC로 극복
+
+* 스프링 JDBC가 해주는 작업
+  - Connection 열기와 닫기
+  - Statement 준비와 닫기, 실행
+  - ResultSet 루프
+  - 예외처리와 변환(SQLException을 런타임 예외인 DataAccessException 타입으로 변환)
+  - 트랜잭션 처리
+
+* 스프링 JDBC에서 가장 많이 이용 -> SimpleJdbcTemplate, SimpleJdbcInsert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
