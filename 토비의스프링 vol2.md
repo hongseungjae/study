@@ -137,8 +137,23 @@
   - 예외처리와 변환(SQLException을 런타임 예외인 DataAccessException 타입으로 변환)
   - 트랜잭션 처리
 
-* 스프링 JDBC에서 가장 많이 이용 -> SimpleJdbcTemplate, SimpleJdbcInsert
+* 스프링 JDBC에서 가장 많이 이용 -> SimpleJdbcTemplate, SimpleJdbcInsert -> 3.1에서 @Deprecated, 대신 JsbcTemplate과 NamedParameterJdbcTemplate 이용
+* ibatis 사용법 270p
+* 바이트코드 향상 기법 : 이미 컴파일된 클래스 바이트 코드를 조작해서 새로운 기능을 추가하는 것
+* 런타임 시에 클래스를 로딩하면서 기능을 추가하는 것 : 로드타임 위빙 -> 스프링 JPA에서 사용
 
+* 선언적 트랜잭션 경계설정 기능을 이용하면 코드 내에서 직접 트랜잭션을 관리하고 트랜잭션 정보를 파라미터로 넘겨서 사용하지 않아도됨 <-> 트랜잭션 스크립트 방식
+  - 비즈니스로직과 데이터액세스 로직을 분리
+
+* PlatformTansactionManager를 DI 받아서 getTransaction() 해보면 현재 진행중인 트랜잭션 확인 가능
+
+* 인터페이스 없이 직접 dao클래스를 사용하는 경우 불필요한 메서드에도 트랜잭션 동작, final 사용불가
+* 셀프이보케이션 문제
+   - 프록시를 가져와서 그 프록시로 호출
+   - AspectJ AOP 이용
+
+* 트랜잭션 전파 : 트랜잭션을 시작하거나 기존 트랜잭션에 참여하는 방법을 결정하는 속
+* 트랜잭션 격리수준 : 동시에 여러 트랜잭션이 진행될 때에 트랜잭션의 작업 결과를 여타 트랜잭션에게 어떻게 노출할 것인지를 결정하는 기준
 
 
 
