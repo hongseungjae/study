@@ -201,5 +201,59 @@
   - HttpServletRequest rowlevel 코드를 감추고, 뷰를 세팅하거나, 필요한 request 파라미터를 세팅해두고 이를 호출하는 메서드를 abstract로 (템플릿메서드)
 
 * AnnotationMehtodHandlerAdapter(스프링 3.2에서 deprecated RequestMappingHandlerAdapter변경) : 여타 핸들러 어댑터는 지원하는 컨트롤러의 타입이 정해져있지않음
+  - 애노테이션의 정보와 메소드 이름, 파라미터, 리턴 타입에 대한 규칙 등을 이용하고 컨트롤러 선별
+  - 컨트롤러 하나가 하나 이상의 URL에 매핑될 수 있음
+  - URL을 매핑을 컨트롤러단위가 아닌 메소드 단위로
+
+* 핸들러 매핑 기본 전략
+  - BeanNameUrlHandlerMapping
+    - 빈의 이름에 들어 있는 URL과 HTTP 요청의 URL 비교해서 일치하는 빈
+    - /root/**/sub 일경우 **는 하나 이상의 경로를 포함
+  - 특정 전략을 빈으로 등록하면 디폴트 핸들러 매핑은 등록하지않음을 주의
+  - RequestMappingHandlerMapping
+    - @RequestMapping이라는 애노테이션을 컨트롤러 클래스나 메소드에 직접 부여함
+    - 컨트롤러의 개수를 줄일 수 있는 장점
+
+* 핸들러 인터셉터
+  - 핸들러 매핑의 역할은 컨트롤러 빈을 찾아주는 것, 그리고 핸들러 인터셉터를 적용해주는 것
+  - 컨트롤러를 호출하기 전과 후에 요청과 응답을 참조하거나 가공할 수 있는 일종의 필터
+  - 핸들러 매핑은 DispatcherServlet으로부터 매핑 작업을 요청받으면 그 결과로 핸들러 실행 체인(HandlerExcutionChain)을 돌려줌
+  - 서블릿 필터와 그 쓰임새가 유사한데 HttpServletRequest, HttpServletResponse뿐 아니라, 실행될 컨트롤러 빈 오브젝트, 돌려줄 ModelAndView, 발생한 예외 등을 제공받을 수 있음, 또한 자체가 빈이기때문에 DI를 통해 다른 빈을 활용
+  - 서블릿은 모든 요청에 적용, 핸들러는 특정 핸들러 매핑으로 제한
+  - 인터셉터 대신 컨트롤러에 aop 적용은? -> 메소드마다 파라미터 리턴 제각각이므로 쉽지 않음
+
+* 확장컨트롤러
+  - 컨트롤러 인터페이스를 정의하고, 애노테이션을 이용하여 엘리먼트 값을 이용해 정보를 넣어줌
+  - 어댑터에서 이 인터페이스 타입 support 해놓고, 애노테이션에서 정보 뽑아서 활용하기
+
+* 핸들러 예외 리졸버
+  - HandlerExceptionResolver는 컨트롤러의 작업 중에 발생한 예외를 어떻게 처리할지 결정하는 전략
+
+* HandlerExceptionResolver 인터페이스 구현 전략
+  1. AnnotationMehtodHandlerExceptionResolver
+     - 예외가 발생한 컨트롤러 내의 메소드 중에서 @ExceptionHandler 애노테이션이 붙은 메소드를 찾아 예외처리를 맡겨주는 핸들러 예외 리졸버
+  2. ResponseStatusExceptionResolver
+     - 예외 클래스에 @ResponseStatus를 부팅고, 단순한 HTTP 500 에러 대신 의미 있는 응답상태 제공
+  3. DefaultHandlerExceptionResolver
+     - 위의 두 가지 예외 리졸버에서 처리하지 못한 예외를 다룸, 표준 예외처리 로직 가지고 있음
+  4. SimpleMappingExceptionResolver
+     - 예외와 그에 대응되는 뷰 이름을 매핑
+
+* 플래시 맵 : 플래시 애트리뷰트를 저장하는 맵
+  - 하나의 요청에서 생성되어 다음 요청으로 전달되는 정보 -> Post/Redirect/Get 패턴을 적용한 경우 POST단계의 작업 결과 메시지를 리다이렉트된 페이지로 전달할 때 주로 사용
+
+
+* WebApplicationInitializer 통해 web.xml 등 설정 작업을 모두 자바 코드로 가능하게함
+
+==============================4
+
+
+
+
+
+
+
+
+
 
 
