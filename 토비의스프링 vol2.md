@@ -180,10 +180,26 @@
   7. RequestToViewNameTranslator
 
 
+* 간단하게 만들어보기
+  1. SimpleControllerHandlerAdapter를 이용하여 커스텀 컨트롤러 처리하기 -> Controller 인터페이스를 구현한 핸들러를 처리함, 즉 어댑터에서 처리할수 있는 인터페이스를 컨트롤러에서 구현
+  2. Controller 인터페이스는 ModevlAndView handleRequest(HttpServletRequest request, HttpServletResponse response) 가진 메서드
+  3. 해당 인터페이스를 구현한 HelloController를 만들자
+  4. 이제 이 HelloController의 handleRequest가 SimpleControllerHandlerAdapter를 통해 DispatcherServlet으로부터 호출될 것
+  5. 이제 DispatcherServlet이 핸들러 매핑을 해야되는데 BeanNameUrlHanlderMapping임 -> <bean name="/hello" class="springbook.temp.HelloController" /> name에 경로를 줌
+  6. 그러면 요청 경로를 이용해서 HelloController를 찾고, 그 handler를 처리해줄 adpater를 찾는구나 나이스
+  7. 그리고 InternalResourceViewResolver 뷰리졸버를 이용해서 컨트롤러가 리턴한 뷰 이름에 해당하는 뷰 오브젝트를 가져오고 HTTP 응답결과를만들어냄
+  8. 정리 -> 요청이 들어오면 DispatcherServlet이 요청정보를 분석해 핸들러를 찾음, 그 핸들러는 특정 인터페이스를 구현하고있는데, 그 인터페이스를 처리해줄수있는 어댑터를 for문을 돌면서 찾음, 찾으면 어댑터에게 처리요청을함(만약 어댑터를 안쓰면, 새로운 컨트롤러를 추가할때마다 소스 수정되야됨)
 
+* MockHttpServletRequest, MockHttpServletResponse로 테스트 가능
+* DispatcherServlet 테스트 시 ConfigurableDispatcherServlet 활용, AbstractDispatcherServletTest 활용
+* 서블릿처럼 동작하는 컨트롤러를 만들기위해, 서블릿은 모델과뷰 리턴이 없으므로 HttpRequestHandler의 void handleRequest()메소드를 구현하고, 디폴트 어댑터 전략인 HttpRequestHandlerAdapter를 이용하면됨
 
+* 커스텀 컨트롤러를 만들기위해 Controller인터페이스를 직접 구현하는건 권장되지 않음, 적어도 필수 기능이 구현되어 있는 AbstractController를 상속해서 컨트롤러를 만드는게 편하기 때문
+  - 예를 들어 Method를 제한하려면 직접코드를 짜는게 아닌 구현되어있는 쓸수있음
+  
+* 간단히 Controller는 인터페이스를 구현한 abstract 기반 클래스를 두고 이를 구현하게 사용
+  - HttpServletRequest rowlevel 코드를 감추고, 뷰를 세팅하거나, 필요한 request 파라미터를 세팅해두고 이를 호출하는 메서드를 abstract로 (템플릿메서드)
 
-
-
+* AnnotationMehtodHandlerAdapter(스프링 3.2에서 deprecated RequestMappingHandlerAdapter변경) : 여타 핸들러 어댑터는 지원하는 컨트롤러의 타입이 정해져있지않음
 
 
