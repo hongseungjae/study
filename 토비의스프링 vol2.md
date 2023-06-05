@@ -78,7 +78,7 @@
 * request를 컨트롤러와 서비스계층에서 모두 사용할 경우 163p
   - request 안에서 dao에 접근해서 member를 세팅해놓기
   - 이때 request는 di를 받아야됨 -> 빈으로 만들기 -> 프로토타입으로, @Componet @Scope("prototype")
-  - 빈 가져오기 this.conext.getBean(ServiceRequest.classs);, @Autowired로 가져오면 새로 생성되지않음 주의하기
+  - 빈 가져오기 this.conext.getBean(ServiceRequest.classs);, @Autowired로 가져오면 새로 생성되지않음 주의하기 -> DL (getBean하거나 Provider로 타입으로 주입 받아서 get하기)
 
 * DL 전략
   1. ApplcationContext, BeanFactory
@@ -95,7 +95,7 @@
 
 * 스코프의 종류
   - 싱글톤, 프로토타입 외 요청, 세션, 글로벌세션, 애플리케이션 네 가지 스코프 
-  - 스코프는 프로토타입과 다르게 컨테이너가 전 과정을 관
+  - 스코프는 프로토타입과 다르게 컨테이너가 전 과정을 관리 
 
 * 스코프 빈은 DL 대신 스코프 프록시를 이용하여 DI를 해줄 수 있음
   - @Scope(value="session", proxyMode-ScopedProxyMode.TARGET_CLASS)
@@ -250,6 +250,34 @@
 
 4장
 ***
+
+* 제네릭스와 매피정보 상속을 이용해 컨트롤러 작성 480p
+  - 도메인별로 CRUD와 검색 기능을 가진 메소드가 중복돼서 등장
+  - abstract GenericController<T, K, S>를 구성해 컨트롤러에서 상속받게 만듬
+  - 컨트롤러 코드가 매우 간결해지고 개발 생산성을 높여줌
+ 
+ * @Controller를 담당하는 어댑터 핸들러는 상당히 복잡함
+   - 사용할 수 있는 파라미터나 리턴 값의 종류 등 다양하게 처리할수 있게만들어야 돼서
+
+* 컨트롤러 메서드 파라미터
+  - @ReqestParm은 String, int , 복잡한오브젝트 @ModelAttribute 
+  - @ModelAttribute는 검증 작업이 추가적으로 진
+  - @ModelAttribute 는 예외 발생 시 BindException 타입의 오브젝트에 담겨서 컨트롤러로 전달, 수정할 기회를 주기위해 파라미터로 BindingResult 타입의 파라미터를 같이 사용
+  - @RequestBody는 HTTP 요청의 본문 부분이 그대로 전달
+    - HttpMessageConverter 타입의 메시지 변환기가 여러개 등록
+    - HTTP 요청의 미디어 타입과 파라미터 타입을 확인해서 처리할 수 있는 처리기 있으면 처리해서 파라미터로 전달
+    - Json일 경우 MappingJacksonHttpMessageConverter를 사용
+  - 수정폼관련한 문제를 해결하기위해 @SessionAttributes 활용 - 수정폼을먼저 저장, 나중에 변경폼이 오면 세션에 저장해놓은것을 꺼내고 변경폼에서 전송해준 파라미터만 바인딩
+  - 세션에 저장된 폼을 제거하기위해 SessionStatus 사용
+
+* 스프링 파라미터 변환은 프로퍼티에디터를 사용함
+  - 커스텀 프로퍼티 에디터 만들려면 PropertyEditorSupport 확장한 클래스 만들기
+  - @InitBinder를 컨트롤러에 등록해서 WebDataBinder에 추가하기
+  - 많은 곳에서 사용된다면 WebBindingInitializer를 이용하기 ( 디폴트핸들러어댑터도 추가해줘야댐)
+  - 프로퍼티 에디터는 공유되면 안됨, new 로 새로만듬 -> 만약 DI가 필요하다면? -> 프로토타입 빈
+  - 변환되어야할게 객체 안의 객체라면? -> 그 객체의 키값만 따로 DB조회해서 넣어주기, 커스텀 프로퍼티에디터 사용해서 페이크 객체 만들기(id값만 이용해서 가짜 객체 만들어서 세팅) 546p, 아니면 실제 객체 만들기, 3가지 방법
+  - 그냥 dto를 만들면? -> 데이터 중심 아키텍처, 화면 단위로 코드를 만들어야됨
+  - 548p
 
 
 
