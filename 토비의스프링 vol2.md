@@ -329,10 +329,50 @@
   - MesaageSource를 통해 messages.properties에 내용을 가져옴
   - 규모가 커지면 메시지를 수정하는 일이 힘들 테니 에러 코드와 메시지  프로퍼티 파일을 활용이 좋음
 
+* 메시지 컨버터는 AnnotationMethodHandlerAdapter를 통해 등록
+  - @RequestBody와 @ResponseBody를 이용해 사용
+  - ByteArrayHttpMessageConverter
+  - StringHttpMessageConverter
+  - FormHttpMessageConverter
+  - SourceHttpMessageConverter
+  - 그 외에 디폴트는 아니지만 자주 쓰이는 MappingJacksonHttpzmessageConverter
+ 
+* AnnotationMethodHandlerAdapter 확장 포인트 -> deprecated로 아래의 RequestMappingHandler참고하기
+  - SessionAttributeStore
+    - 다른 방식으로 세션 정보를 저장할 때, SessionAttributeStore 인터페이스를 구현함
+  - WebArgumentResolver
+    - 컨트롤러의 메소드 파라미터를 확장할 수 있음
+  - ModelAndViewResolver
 
+* RequestMappingHandlerMapping : @RequestMapping이 붙은 메소드로 매핑해줌
+  - 기존의 핸들러 매핑전략은 핸들러를 돌려주면 그 특정 메소드를 실행시키는 것
+  - 그러나 @RequestMapping으로 인해 핸들러가 오브젝트 단위에서 메서드 단위로 바뀜
+  - HandlerMethod를 넘겨줌 -> 메소드르 실행하는데 필요한 관한 참조정보를 담고 있는 오브젝트
+    - 빈 오브젝트, 메소드 메타정보, 메소드 파라미터 메타정보, 메소드 애노테이션 메타정보, 메소드 리턴 값 메타정보
+  - RequestMappingHandlerMapping은 DispatherServlet이 시작될 때 모든 컨트롤러 빈의 메소드를 살펴서 매핑 후보가 될 메소드를 추출한 뒤 이를 HandlerMethod형태로 저장해두고, 실제 요청이 들어오면 저장해둔 목록에서 요청 조건에 맞는 HandlerMethod 오브젝트를 돌려줌
 
+* 핸들러 메소드의 매핑 기준이 되는 정보 : request condition(요청 조건)
+  - URL 패턴 : PatternsRequestCondition
+  - HTTP 요청방법 : RequestMethodsRequestCondition
+  - 파라미터 : ParamsRequestCondition
+  - 헤더 : HeadersRequestCondition
+  - Content-Type 헤더 : ConsumesRequestCondition
+  - Accept헤더 : ProducesRequestCondition
 
+* RequestMappingHandlerAdapter : HandlerMethod 타입의 핸들러를 담당하는 핸들러 어댑터
+  - @Validated(그룹 검증), @Valid 지원
+  - @Valid와 @RequestBody
+  - URI를 생성하거나 가공할 때 UriComponentsBuilder 이용
+  - RedirectAttributes와 리다이렉트 뷰
 
+* RequestMappingHandlerAdapter 확장 포인트
+  - 파라미터 : HandlerMethodArgumentResolver -> 새로운 파라미터타입 추가시 해당 인터페이스를 구현 후 추가
+  - 리턴 값 : HanderMethodReturnValueHandler
+
+* @EnableWebMvc와 WebMvcConfigurationSupport 659p
+
+5장
+***
 
 
 
