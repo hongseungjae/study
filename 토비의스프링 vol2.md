@@ -319,6 +319,18 @@
   2. @Valid
   3. 서비스 계층 오브젝트에서의 검증
   4. 서비스 계층을 활용하는 Validator
+  5. 빈 검증 기능 @NotNull, @Min
+
+* 커스텀 검증 빈 만들기 576p
+  - ConstraintValidator를 구현한 MembeerNoValidator 만듥
+  - @MemberNo에 @Constraint(validatedBy=MemberNoValidator.class) 등록
+
+* 에러 코드를 통해 MessageCodeResolver는 좀 더 상세한 메시지 키 값으로 확장됨
+  - MesaageSource를 통해 messages.properties에 내용을 가져옴
+  - 규모가 커지면 메시지를 수정하는 일이 힘들 테니 에러 코드와 메시지  프로퍼티 파일을 활용이 좋음
+
+
+
 
 
 
