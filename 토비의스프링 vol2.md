@@ -280,6 +280,46 @@
   - 548p
 
 
+* 프로퍼티에디터는 매번 객체 생성, 쓰레드 세이프 하지 않아서 싱글톤으로 사용불가 -> 스프링 3.0에서 Converter로 변경 , 멀티스레드 환경에서 안전함, 싱글톤 가능
+  - 프로퍼티데이터는 문자열과 오브젝트 사이의 양방향 변환 기능, Converter는 소스타입에서 타깃 타입으로 단방향만 변환 가능 -> 양쪽 두개 만들어야 양방향
+
+* Converter 타입은 ConversionService 타입의 오브젝트를 통해 WebDataBinder에 설정
+  - @InitBinder를 통한 수동 등록
+  - ConfigurableWebBindingInitializer를 이용한 일괄 등록
+
+* GenericConversionService에 여러가지 디폴트 컨버터가 있음
+
+* Formatter는 Locale 타입의 현재 지역 정보도 함께 제공됨, FormattingConversionServce의 메소드를 이용하여 등록
+  - @NumberFormat
+  - @DataTimeFormat
+
+* 바인딩 기술 선택하기
+  - 사용자 정의 타입의 바인딩을 위한 일괄 적용 : Converter
+  - 필드와 메소드 파라미터, 애노테이션 등의 메타정보를 활용하는 조건부 변환 기능: ConditionalGenericConverter
+  - 필드에 부여하는 애노테이션 정보를 이용해 변환 긴능 지원하려면 AnnotationFormatterFactory와 Formatter
+  - 특정 필드에만 적용되는 변환 기능 : PropertyEditor
+
+* 바인딩 적용 우선 순위
+  1. 커스텀 프로퍼티
+  2. 컨버전 서비스의 컨버터
+  3. 디폴트 프로퍼티 에디터
+
+* WebDataBinder는 HTTP 요청정보를 컨트롤러 메소드의 파라미터나 모델에 바인딩할때 사용되는 바인딩오브젝트
+  - allowedFields, disallowedFields
+  - requiredFields
+  - fieldMarkerPrefix
+  - fieldDefaultPrefix
+
+* 검증 과정에서 사용할 수 있는 Validator 표준 인터페이스 제공
+  - 검증 결과는 BindingResult에 저장
+  - supports, validate 구현
+
+* 검증 방법
+  1. 컨트롤러 메소드 내의 코드
+  2. @Valid
+  3. 서비스 계층 오브젝트에서의 검증
+  4. 서비스 계층을 활용하는 Validator
+
 
 
 
