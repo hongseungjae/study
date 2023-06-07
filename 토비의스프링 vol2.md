@@ -429,7 +429,12 @@
 7장
 ***
 
+* 캐시 사용
+  - @Cacheable, @CacheEvict
 
+* @Enable 활용 780p\
+* \
+* 
 
 
 
