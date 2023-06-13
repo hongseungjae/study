@@ -188,6 +188,9 @@ https://bbo-blog.tistory.com/87?category=1004651
   - 2. 없을 시 루트 DNS 서버에 문의 후 .com인 것을 확인 후 .com 등록된 DNS서버의 IP를 전달
   - 3. 로컬 DNS 서버는 www.naver.com를 .com DNS서버에게 문의, naver.com이 없으므로 해당 url을 관리하는 DNS 서버를 알려줌
   - 4. 로컬 DNS 서버는 www.naver.com를 .naver.com DNS서버에게 문의, 해당 주소가 있으므로 IP를 반환
+  - 로컬 DNS 서버가 열 DNS 서버를 차례대로(Local DNS 서버 -> Root DNS 서버 -> com DNS 서버 -> naver.com DNS 서버) 물어보며 답을 찾는 과정을 Recursive Query
+  - .com : 이것은 Top-level Domain Name이라고 부른다.
+.naver.com : 이것은 Second-level Domain Name이라고 부른다.
 
 https://it-mesung.tistory.com/180
 
