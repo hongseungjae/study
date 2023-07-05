@@ -242,6 +242,13 @@
 * @PersistenceContext : EntityManager 주입
 * @PersistenceUnit : EntityManagerFactory 주입
 
+* 스프링 데이터 JPA는 스프링 프레임워크에서 JPA를 편리하게 사용할 수 있도록 지원하는 프로젝트
+  - 지루하게 반복되는 CRUD 문제를 해결
+  - 데이터 접근 계층을 개발할 때 구현 클래스 없이 인터페이스만 작성해도 개발을 완료할 수 있
+
+* QueryDslPredicateExecutor는 편리하게 QueryDSL을 사용할 수 있지만 한계 -> JPAQuery를 직접 사용하거나 QueryDslRepositorySupport를 사용 573p
 * 
+
+
 
   
