@@ -1,0 +1,33 @@
+Serial GC
+GC를 처리하는 쓰레드가 1개(싱글 쓰레드)
+다른 GC에 비해 stop-the-world 시간이 길다
+Mark-Compact 알고리즘 사용
+
+
+Parallel GC
+Java 8의 default GC
+Young Generation의 GC를 멀티 쓰레드로 수행
+Serial GC에 비해 stop-the-world 시간 감소
+
+
+Parallel Old GC
+Parallel GC를 개선
+Old Generation에서도 GC를 멀티 쓰레드로 수행
+Mark-Summary-Compact 알고리즘 사용
+
+
+CMS (Concurrent Mark Sweep) GC
+stop-the-world 시간을 줄이기 위해 고안됨
+compact 과정이 없음
+initial Mark - GC Root에서 참조하는 객체들만 식별
+Concurrent Mark - 이전 단계에서 식별한 객체들이 참조하는 모든 객체 추적
+Remark - 이전 단계에서 식별한 객체를 다시 추적, 추가되거나 참조가 끊긴 객체 확정
+Concurrent Sweep - unreachable 객체들을 삭제
+
+
+G1 (Garbage First) GC
+CMS GC를 개선
+Java 9+의 default GC
+Heap을 일정한 크기의 Region으로 나눔
+전체 Heap이 아닌 Region 단위로 탐색
+compact 진행
