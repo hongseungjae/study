@@ -1,0 +1,234 @@
+도커를 사용하는 이유
+
+1. 환경에 종속적이지 않음
+
+예를 들어 깃랩을 설치하려고하면
+os마다 설치방법, 커맨드가 다름
+
+그러나 도커를 사용하면 한 번의 명령어로 성공적으로 다운
+=========================
+
+2. 기존 가상화 보다 가볍다
+VM이미지르르 사용하는 것에 비해서 컨테이너 이미지 생성이 쉽고 효율적
+
+===============================
+
+docker pull mysql:8.0.17
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.28.5/dockercompose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+자 정리를 해보자
+
+
+1. 목표 -> 스프링부트앱과 mysql을 도커에 올려서 사용해보기
+
+변경사항
+1. h2 -> mysql yml 필요
+2. build.gradle 	implementation 'mysql:mysql-connector-java'
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/mysql?useSSL=false&allowPublicKeyRetrieval=true	<<<---- mysql:3306 이 부분이 도커 컨테이너 이름이 됨
+    username: hong
+    password: hong
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+  redis:
+    lettuce:
+      pool:
+        max-active: 5
+        max-idle: 5
+        min-idle: 2
+    host: localhost
+    port: 6379
+
+
+진행
+1. 우분투에 도커 설치
+2. application-test.yml에 mysql 설정 넣어놓기
+3. jar 뽑아내기
+4. 도커파일 작성 하기
+DockerFile
+
+FROM openjdk:17
+ARG JAR_FILE=./quick-together-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-Dspring.profiles.active=test","-jar","/app.jar"]    <<<-----------전에 설정해놓은 application-test.yml 으로 세팅
+
+5. 스프링부트와 mysql 같은 네트워크에서 동작하게 하기
+docker network create springboot-mysql-net
+docker network ls
+
+6. 스프링부트앱 빌드하기
+docker build -t springboot-mysql:1.0 .
+
+docker build -t springboot:1.0 .
+
+============== 스프링부트앱 docker 빌드까지해놓고 mysql docker 올리기
+7. mysql image pull 땡기기
+docker pull mysql:8.0.31
+
+8. mysql 실행하기
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --name mysql --network springboot-mysql-net mysql:8.0.31 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --name mysql mysql:8.0.31 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --name mysql:8.0.31 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+9. mysql 계정 권한 넣기
+
+docker 이용해서 접근
+docker exec -it mysql bash
+mysql -u root -p
+
+use mysql;
+show tables;
+select user, host from user;
+
+create user hong@'%' identified by 'hong';
+grant all privileges on mysql.* to hong@'%' with grant option;
+flush privileges;
+
+10. springboot docker 실행하기
+docker run -p 8080:8080 --name springbootapp --network springboot-mysql-net -d springboot-mysql:1.0 
+
+docker run -p 8080:8080 --name springbootapp -d springboot:1.0
+
+:/var/lib/docker/containers
+docker build -t myapp .
+docker run -p 8080:8080 -e DB_HOST=172.31.39.213 --name mycontainer myapp
+
+docker build -t myapp .
+docker run -p 8080:8080 --name mycontainer myapp
+
+docker run -p 8080:8080 -e DB_USER=root -e DB_PASSWORD=root --name mycontainer myapp
+
+
+11. docker ps로 상태보기
+
+12. docker logs -f springbootapp 로그보기
+
+mysql 8.0.22 미만 버전은 예약어로 member가 걸려있어서 테이블이 안만들어짐
+
+
+docker hub push 
+
+docker image tag [기존이미지명]:[태그명] [도커계정명]/[신규이미지명]:[태그명]
+docker image tag quick-together-test:0.0.9 hongseungjae1/quick-together-test:0.0.9
+
+docker push 도커ID/quick-together-test:0.0.9
+
+==============================================================================================================================
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io docker-compose-pluginplugin
+
+service docker start
+
+docker run hello-world
+
+
+ps -p 1 -o comm=
+
+
+service docker status
+
+
+Channel Connectivity change to IDLE" module=grpc
+failed to start daemon: Error initializing network controller: error obtaining controller instance: failed to create NAT chain DOCKER: iptables failed: iptables -t nat -N DOCKER: iptables v1.8.4 (legacy): can't initialize iptables table `nat': Table does not exist (do you need to insmod?)
+Perhaps iptables or your kernel needs to be upgraded.
+ (exit status 3)
+
+
+docker run --privileged --name docker-server -itd -p 10022:22 -p 8081:8080 -e container=docker -v /sys/fs/cgroup:/sys/fs/cgroup hello-world /usr/sbin/init
+
+
+
+docker images
+
+# 이미지 생성
+sudo docker build -t ec2/spring-server .
+
+docker build -t quick-together-test:0.0.2 .
+
+# 컨테이너 실행
+sudo docker run -d --name spring_server -p 8080:8080 ec2/spring-server
+ 
+# 로그 보기
+sudo docker logs -f spring-server
+
+1.
+docker pull mysql:5.7
+
+2.
+docker run --name db-mysql -p 3306:3306 --network springboot-mysql-net -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=mydb -e MYSQL_USER=user -e MYSQL_PASSWORD=user -d mysql:5.7
+
+docker ps -a
+
+https://velog.io/@dhk22/Springboot-MySQL-Docker-%EB%8F%84%EC%BB%A4%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%84%B1
+https://oingdaddy.tistory.com/299
+docker rmi
+
+컨테이너 실행
+docker start db-mysql
+
+
+docker run --name my_container -d -p 8080:8080 quick-together-test:0.0.1
+
+> docker exec -it <mysqlservername> bash
+/# mysql -u root -p
+
+docker exec -it mysql bash
+mysql -u root -p
+
+https://velog.io/@dhk22/Springboot-MySQL-Docker-%EB%8F%84%EC%BB%A4%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%84%B1
+
+버츄얼박스 포트포워딩
+https://www.leafcats.com/155
+
+docker mysql
+https://mycup.tistory.com/382
+
+
+젠킨스
+https://pjh3749.tistory.com/261
+
+
+docker 메모리 저장방식
+https://thalals.tistory.com/343
+
+compose
+https://do-study.tistory.com/m/126
+
+sudo mount -t vboxsf virtualbox_share /mnt/share
+
+=========================================================================================
+version: '3'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app1
+      - app2
+  app1:
+    image: my-spring-app
+    ports:
+      - "8080"
+  app2:
+    image: my-spring-app
+    ports:
+      - "8080"
