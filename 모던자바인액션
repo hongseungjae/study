@@ -17,4 +17,22 @@ static List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p);
 사과를 녹색사과만 뽑기, 혹은 150 그램 이상만 등등 조건이 계속 달라 질 수 있음
 -> 유연하게 추상화해야됨, 전략패턴 이용함
 -> ApplePredicate를 구현하고 메서드 구현한 클래스 넘겨주기, 필요없는 코드들 추가(클래스를 구현해서 인스턴스화하는 과정) -> 익명클래스사용 -> 람다 표현식 사용
--> 
+
+람다표현식 : 메서드로 전달할 수 있는 익명 함수를 단순화한 것
+
+Predicate<T>가 함수형 인터페이스, 오직 하나의 추상 메서드만 지정하기 때문
+
+함수형 인터페이스로 무엇을? -> 람다 표현식으로 함수형 인터페이스의 추상 메서드 구현을 직접 전달가능
+
+람다표현식은 변수에 할당하거나 함수형 인터페이스를 인수로 받는 메서드로 전달가능, 함수형 인터페이스의 추상 메서드와 같은 시그니처를 갖음
+Runnable r1 = () -> System.out.println("Hello World 1");  -> 변수에 할당, Runnable run()와 같은 시그니처
+
+public static void process(Runnable r) {
+}
+
+process(() -> System.out.println("Hello World 3")); -> 직접 전달
+
+====
+@FunctinalInterface란 함수형 인터페이스임을 가리키는 어노테이션, 선언했지만 함수형 인터페이스가 아니면 컴파일 에러 발생시킴
+
+
