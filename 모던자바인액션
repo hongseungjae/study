@@ -36,4 +36,4 @@ process(() -> System.out.println("Hello World 3")); -> 직접 전달
 @FunctinalInterface란 함수형 인터페이스임을 가리키는 어노테이션, 선언했지만 함수형 인터페이스가 아니면 컴파일 에러 발생시킴
 
 ======================= start..
-람다식
+람다식..
