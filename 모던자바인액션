@@ -50,6 +50,5 @@ Runnable r = () -> System.out.println(portNumber);
 
 생성자 참조는 일치하는 시그니처를 갖는 함수형 인터페이스가 필요
 
-
-
+람다 표현식 전체가 함수형 인터페이스의 인스턴스로 취급
 
