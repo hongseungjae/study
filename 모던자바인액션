@@ -62,3 +62,4 @@ Runnable r = () -> System.out.println(portNumber);
 3. 병렬화 : 성능이 좋아짐
 
 143p
+stream
