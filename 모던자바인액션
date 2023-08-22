@@ -66,9 +66,14 @@ stream
 
 스트림은 lazy 연산을함, 중간 연사을 합친 다음에 합쳐진 중간 연산을 최종 연산으로 한 번에 처리
 
+정렬
+.sorted(comparing(Trader::getName))
+.min(comparing(Transaction::getValue))
+
 스트림 슬라이싱
 takeWhile : 정렬되어있는 요소에서 특정 값보다 크거나 같은 값을 찾을 때 그 이후에는 탐색을 안할 수있게 슬라이싱
-dropWhile : takeWhile과 정바대의 작업, 프레디케이트가 거짓이 되면 그 지점에서 작업을 중단하고 남은 모든 요소를 반환
+dropWhile : takeWhile과 정반
+대의 작업, 프레디케이트가 거짓이 되면 그 지점에서 작업을 중단하고 남은 모든 요소를 반환
 limit : 주어진 값 이하의 크기를 갖는 새로운 스트림
 skip : 요소 건너뛴 후 진행
 
@@ -79,5 +84,10 @@ flatMap : 스트림의 각 값을 다른 스트림으로 만든 다음에 모든
 
 검색과 매칭
 anyMatch, allMatch, noneMatch, findFirst, findAny
+
+리듀싱 
+모든 스트림 요소를 처리해서 값으로 도출하는 것
+.reduce(Integer::max)
+.reduce(0, (a,b) -> a+b);  모든합
 
 
