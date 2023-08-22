@@ -63,3 +63,21 @@ Runnable r = () -> System.out.println(portNumber);
 
 143p
 stream
+
+스트림은 lazy 연산을함, 중간 연사을 합친 다음에 합쳐진 중간 연산을 최종 연산으로 한 번에 처리
+
+스트림 슬라이싱
+takeWhile : 정렬되어있는 요소에서 특정 값보다 크거나 같은 값을 찾을 때 그 이후에는 탐색을 안할 수있게 슬라이싱
+dropWhile : takeWhile과 정바대의 작업, 프레디케이트가 거짓이 되면 그 지점에서 작업을 중단하고 남은 모든 요소를 반환
+limit : 주어진 값 이하의 크기를 갖는 새로운 스트림
+skip : 요소 건너뛴 후 진행
+
+매핑
+map : 인수로 제공된 함수는 각 요소에 적용되며 함수를 적용한 결과가 새로운 요소로 매핑
+Arrays.stream() 문자열 배열을 받아 문자열 스트림을 만듬
+flatMap : 스트림의 각 값을 다른 스트림으로 만든 다음에 모든 스트림을 하나의 스트림으로 연결하는 기능
+
+검색과 매칭
+anyMatch, allMatch, noneMatch, findFirst, findAny
+
+
