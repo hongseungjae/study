@@ -90,4 +90,5 @@ anyMatch, allMatch, noneMatch, findFirst, findAny
 .reduce(Integer::max)
 .reduce(0, (a,b) -> a+b);  모든합
 
+iterate와 generate 같은 메서드로 스트림을 생성 가능
 
