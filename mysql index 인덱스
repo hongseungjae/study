@@ -1,0 +1,43 @@
+키워드쪽 인덱스
+CREATE INDEX IDX_ALL ON keyword_t(K_XP, K_YP, K_ZP, K_DELYN);
+CREATE INDEX IDX_ALL ON keyword_t(K_YP, K_ZP);
+
+ALTER TABLE keyword_t DROP INDEX IDX_ALL ;
+
+CREATE FULLTEXT INDEX idx_content ON data_b (md_content) with PARSEr ngram;
+
+-- 인덱스 타는지 확인 (Type가 ALL이고 possible keys가 NULL이면 안탐)
+EXPLAIN
+SELECT * FROM TB1
+ WHERE NAME = '철수';
+
+-- 테이블 인덱스 확인
+SHOW INDEX FROM TB1;
+
+-- 인덱스 생성
+CREATE INDEX 인덱스명 ON 테이블명(컬럼명);
+ALTER TABLE 테이블명 ADD INDEX 인덱스명(컬럼명);
+
+-- 인덱스 삭제 (수정 시에는 DROP 후 재생성)
+ALTER TABLE 테이블명 DROP INDEX 인덱스명;
+
+show index from keyword_t;
+drop index I_k_value on new_schema.keyword_t ;
+
+CREATE FULLTEXT INDEX ft_value ON new_schema.keyword (K_VALUE);
+
+ALTER TABLE 테이블이름 DROP INDEX FULLTEXT (열이름);
+drop index idx_description on FulltextTbl ;
+
+
+SELECT * FROM new_schema.keyword_t WHERE MATCH(K_VALUE) AGAINST('*제외*' IN BOOLEAN MODE);
+
+CREATE INDEX I_k_value ON KEYWORD_T(K_VALUE(100));
+
+15:57:31	CREATE INDEX I_k_value ON KEYWORD_T(K_VALUE)	Error Code: 1071. Specified key was too long; max key length is 1000 bytes	0.000 sec
+
+==============
+# index로 gropu by 해도 인덱스 타는 컬럼 제외한 나머지 컬럼을 select 할 경우 ALL 스캔
+# 멀티 인덱스 중 하나로 group by 쳐도 index를 탐
+# 인덱스에 cardinality는 그 인덱스로 group by 쳤을 때의 row 수와 같다
+# explain rows는 반환되는 결과 row수다
