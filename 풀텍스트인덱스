@@ -1,0 +1,41 @@
+Full Text Search 적용은 MyISAM은 MySQL 5.5 버전 이상부터, innoDB는 MySQL 5.6 버전 부터 지원
+출처: https://gngsn.tistory.com/163 [ENFJ.dev:티스토리]
+
+Stop-word parser
+→ 공백이나 Tab, 문장 기호, 또는 사용자가 정의한 문자열을 기준으로 토큰을 나누는 기법
+ex> 아빠가 방에 들어갔다. → 아빠가 / 방에 / 들어갔다.
+
+N-gram parser
+→ n-gram 기법을 사용하여 할당한 토큰의 크기 n만큼씩 데이터를 인덱스로 파싱해두었다가 사용하는 기법
+ex> 아빠가 방에 들어갔다. → 아빠 / 빠가 / 방에 / 들어 / 어갔 / 갔다.
+출처: https://scarelt.tistory.com/10
+
+Stop-word parser 만드는 방법
+CREATE FULLTEXT INDEX idx_content ON data_b (md_content);
+
+N-gram parser 만드는 방법
+CREATE FULLTEXT INDEX idx_content ON data_b (md_content) with PARSER ngram;
+
+Stop-word parser 토큰 사이즈
+SHOW VARIABLES LIKE '%FT_MIN%';
+-> 2개로 만들고 해도 like 검색어 개수 차이남
+
+N-gram parser 토큰 사이즈
+ngram_token_size
+-> like와 검색 개수 똑같음
+
+만들 시 데이터 크기 비교
+#146,983,544 // 원본 데이터
+#144,781,312 // stop-word 데이터 (토큰 사이즈 2)
+#235,822,080 // ngram 데이터  (토큰 사이즈 2)
+
+검색 속도 비교
+select * from data_b where md_content LIKE '%안녕%';
+SELECT * FROM data_b WHERE MATCH(md_content) AGAINST('*안녕*' IN BOOLEAN MODE);
+
+LIKE 검색 0.328
+FULLTEXT 검색(ngram) 0.016
+검색 row 수 반환
+
+
+
