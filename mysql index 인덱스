@@ -40,4 +40,4 @@ CREATE INDEX I_k_value ON KEYWORD_T(K_VALUE(100));
 # index로 gropu by 해도 인덱스 타는 컬럼 제외한 나머지 컬럼을 select 할 경우 ALL 스캔
 # 멀티 인덱스 중 하나로 group by 쳐도 index를 탐
 # 인덱스에 cardinality는 그 인덱스로 group by 쳤을 때의 row 수와 같다
-# explain rows는 반환되는 결과 row수다
+explain rows는 반환되는 결과 row수가 아니라 스캔한 수네
