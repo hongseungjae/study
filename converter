@@ -1,0 +1,32 @@
+GenericConversionService
+
+		@Nullable
+		public GenericConverter getConverter(TypeDescriptor sourceType, TypeDescriptor targetType) {
+			for (GenericConverter converter : this.converters) {
+				if (!(converter instanceof ConditionalGenericConverter genericConverter) ||
+						genericConverter.matches(sourceType, targetType)) {
+					return converter;
+				}
+			}
+			return null;
+		}
+
+
+ConvertiblePair 비교하는데
+private final Class<?> sourceType;
+private final Class<?> targetType;
+이 두개를 비교함
+
+즉, String에서 Enum일경우 해당 컨버터가 있으면 true임
+String에서 Enum<? extends CustomEnum> 이거까지 비교가 안되서 문제가 발생했던것
+
+===
+
+ConditionalGenericConverter 으로 만들면 문제 해결할수있음 아래 과정
+
+!(converter instanceof ConditionalGenericConverter genericConverter)
+해당 조건으로 인해 ConditionalGenericConverter 구현한 것이 아니면 true라서 무조건 넘어감
+
+ConditionalGenericConverter 일경우 matches까지 판단해 타입 설정가능
+
+
